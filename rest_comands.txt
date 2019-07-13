@@ -2,7 +2,7 @@ curl -X POST \
   http://127.0.0.1:5000/ \
   -H 'content-type: application/json' \
   -d '{
-    "service_provider":"AWS_SES",
+    "service_provider":"AWSSES",
 	"sender": "sandeepnl@outlook.com",
 	"recipient": "mail2sandeepnl@gmail.com",
 	"subject": "AWS SES Flask Mail Sender",
@@ -11,12 +11,24 @@ curl -X POST \
 
 
 curl -X POST \
-  http://127.0.0.1:5000/ \
+  http://127.0.0.1:5000/sendmail \
   -H 'content-type: application/json' \
   -d '{
-    "service_provider":"SEND_GRID",
+    "service_provider":"SENDGRID",
 	"sender": "sandeepnl@outlook.com",
 	"recipient": "mail2sandeepnl@gmail.com",
 	"subject": "Send Grid Flask Mail Sender",
+	"body": "<br><br> <b>Mail test</b>"
+    }'
+
+
+curl -X POST \
+  http://127.0.0.1:5000/sendmail \
+  -H 'content-type: application/json' \
+  -d '{
+    "service_provider":"MAILGUN",
+	"sender": "sandeepnl@outlook.com",
+	"recipient": "mail2sandeepnl@gmail.com",
+	"subject": "MAILGUN REST API Sender",
 	"body": "<br><br> <b>Mail test</b>"
     }'

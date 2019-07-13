@@ -1,22 +1,15 @@
-import os
-import pathlib
-import boto3
-import email.utils
 import smtplib
-import sendgrid
+import requests
 import pandas as pd
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from email.mime.base import MIMEBase
-from email import encoders
 from email.utils import formataddr
-
 from sendgrid import SendGridAPIClient
-from sendgrid.helpers.mail import Content, Email, Mail
+from sendgrid.helpers.mail import Mail
 
-AWSSES = "AWS_SES"
-SENDGRID = "SEND_GRID"
-MAILGUN = "MAIL_GUN"
+AWSSES = "AWSSES"
+SENDGRID = "SENDGRID"
+MAILGUN = "MAILGUN"
 SMTP = "SMTP"
 SMTP_HOST = "email-smtp.us-west-2.amazonaws.com"
 SMTP_PORT = 587
@@ -57,50 +50,31 @@ class Email:
             self.service_provider = AWSSES
             self.user = df['Smtp Username'][0]
             self.passwd = df['Smtp Password'][0]
-            # self.init_smtp()
         elif srvs_provider == SENDGRID:
-            self.__sg_apikey = df['SENDGRID_API_KEY'][0]
-            self.client = SendGridAPIClient(self.__sg_apikey)
+            self.__apikey = df['SENDGRID_API_KEY'][0]
+            self.client = SendGridAPIClient(self.__apikey)
             self.service_provider = SENDGRID
+        elif srvs_provider == MAILGUN:
+            self.service_provider = MAILGUN
+            self.__apikey = df['MAILGUN_API_KEY'][0]
+
         else:
             self.client = None
 
+    def send_mailgun_email(self, from_address, to_address, subject, msg):
+        status = requests.post(
+            "https://api.mailgun.net/v3/sandboxff066e78a0f1460a8564a6e2d8566257.mailgun.org/messages",
+            auth=("api", self.__apikey),
+            data={
+                "from": from_address,
+                "to": to_address,
+                "subject": subject,
+                "text": msg
+            })
+        if status.status_code != 200:
+            return True
 
-
-    def init_smtp(self):
-        self.client = smtplib.SMTP(SMTP_HOST, SMTP_PORT)
-        self.client.ehlo()
-        self.client.starttls()
-        self.client.ehlo()
-        self.client.login(self.user, self.passwd, initial_response_ok=True)
-
-    def compose_mime(self,
-                     from_addr=SENDER,
-                     to_addr=RECIPIENT,
-                     subject=SUBJECT,
-                     body=BODY_TEXT):
-        msg = MIMEMultipart('alternative')
-        msg['Subject'] = subject
-        msg['From'] = email.utils.formataddr((SENDERNAME, from_addr))
-        msg['To'] = to_addr
-        msg.add_header('Reply-To', from_addr)
-
-        part1 = MIMEText(body, 'plain')
-        part2 = MIMEText(BODY_HTML, 'html')
-        msg.attach(part1)
-        msg.attach(part2)
-        path = pathlib.Path.cwd().as_posix()
-        filename = 'ML_Notation.pdf'
-        file_path = path + '/' + filename
-        attachment = open(file_path, "rb")
-        part3 = MIMEBase('application', 'octet-stream')
-        part3.set_payload(attachment.read())
-        encoders.encode_base64(part3)
-        part3.add_header('Content-Disposition',
-                         "attachment; filename= %s" % filename)
-        msg.attach(part3)
-
-        return msg.as_string()
+        return False
 
     def send_aws_email(self, reply_to, recipient, subject, body):
         msg = MIMEMultipart('alternative')
@@ -124,16 +98,14 @@ class Email:
             server.close()
         except Exception as e:
             print(e)
-
-            return False
-        else:
             return True
+        return False
 
     def compose_send_grid(self,
                           from_addr=SENDER,
                           to_addr=RECIPIENT,
-                          subject=SUBJECT,
-                          body=BODY_TEXT):
+                          subject="SUBJECT",
+                          body="BODY_TEXT"):
         return Mail(from_email=from_addr,
                     to_emails=to_addr,
                     subject=subject,
@@ -142,8 +114,8 @@ class Email:
     def send_email(self,
                    from_address,
                    to_address,
-                   subject=SUBJECT,
-                   msg=BODY_TEXT):
+                   subject="SUBJECT",
+                   msg="BODY_TEXT"):
         status = 0
         try:
             if self.service_provider == SMTP:
@@ -152,20 +124,19 @@ class Email:
                 mail = self.compose_send_grid(from_address, to_address,
                                               subject, msg)
                 response = self.client.send(mail)
-                status = response.status_code
-            elif self.service_provider == AWSSES:
-                status = self.send_aws_email(from_address, to_address, subject, msg)
+                if response.status_code != 201:
+                    status = False
 
+            elif self.service_provider == AWSSES:
+                status = self.send_aws_email(from_address, to_address, subject,
+                                             msg)
+                print(status)
+            elif self.service_provider == MAILGUN:
+                status = self.send_mailgun_email(from_address, to_address,
+                                                 subject, msg)
         except Exception as e:
-            print(e)
+            print(e, status)
+            return False
         finally:
             print('Email Sent')
-        return status
-
-# #
-# if __name__ == '__main__':
-#     eml = Email("AWS_SES")
-#     ret = eml.send_email(msg=" BODY_TEXT ",
-#                          from_address='sandeepnl@outlook.com',
-#                          to_address='mail2sandeepnl@gmail.com')
-#     print(ret)
+        return False
