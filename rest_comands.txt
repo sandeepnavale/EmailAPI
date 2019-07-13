@@ -1,0 +1,22 @@
+curl -X POST \
+  http://127.0.0.1:5000/ \
+  -H 'content-type: application/json' \
+  -d '{
+    "service_provider":"AWS_SES",
+	"sender": "sandeepnl@outlook.com",
+	"recipient": "mail2sandeepnl@gmail.com",
+	"subject": "AWS SES Flask Mail Sender",
+	"body": "<br><br> <b>Mail test</b>"
+    }'
+
+
+curl -X POST \
+  http://127.0.0.1:5000/ \
+  -H 'content-type: application/json' \
+  -d '{
+    "service_provider":"SEND_GRID",
+	"sender": "sandeepnl@outlook.com",
+	"recipient": "mail2sandeepnl@gmail.com",
+	"subject": "Send Grid Flask Mail Sender",
+	"body": "<br><br> <b>Mail test</b>"
+    }'
