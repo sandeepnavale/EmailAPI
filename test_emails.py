@@ -1,5 +1,4 @@
 import unittest
-import flask_restful
 from rest_apis import app
 from EmailAPI import Email
 

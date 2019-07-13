@@ -32,3 +32,15 @@ curl -X POST \
 	"subject": "MAILGUN REST API Sender",
 	"body": "<br><br> <b>Mail test</b>"
     }'
+
+
+curl -X POST \
+  http://127.0.0.1:8000/sendmail \
+  -H 'content-type: application/json' \
+  -d '{
+    "service_provider":"MAILGUN",
+	"sender": "sandeepnl@outlook.com",
+	"recipient": "mail2sandeepnl@gmail.com",
+	"subject": "MAILGUN REST API Sender",
+	"body": "<br><br> <b>Mail test</b>"
+    }'
