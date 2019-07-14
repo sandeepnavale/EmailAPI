@@ -9,9 +9,11 @@
   Smtp Username,Smtp Password,SENDGRID_API_KEY,MAILGUN_API_KEY 
   AWSUSERNAME,AWSSES_PWD,SEND KEY,MAINGUN_APIKEY
 
-## Libraries used.
+## Libraries & Tools used.
 1. Chalice for deploying on AWS.
 2. sendgrid, smtplib,requests, etc.
+3. httpie to debug AWS REST calls.
+
 
 ## Commands
 ### Chalice commands
