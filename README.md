@@ -35,8 +35,9 @@ curl -X POST \
     }'
 
 **Description of parameters.**
-"service_provider" -- can be "MAILGUN", "AWSSES", or "SENDGRID",
-"sender" -- From email address.  
-"recipient"  -- To email address. 
-"subject": -- Subject of email.
-"body":  -- Body in a HTML format.
+1. "service_provider" -- can be "MAILGUN", "AWSSES", or "SENDGRID",
+2. "sender" -- From email address.  
+3. "recipient"  -- To email address. 
+4. "subject": -- Subject of email.
+5. "body":  -- Body in a HTML format.
+

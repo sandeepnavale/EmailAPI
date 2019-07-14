@@ -1,11 +1,11 @@
 import smtplib
 import requests
-import pandas as pd
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.utils import formataddr
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
+import csv
 
 AWSSES = "AWSSES"
 SENDGRID = "SENDGRID"
@@ -13,8 +13,16 @@ MAILGUN = "MAILGUN"
 SMTP = "SMTP"
 SMTP_HOST = "email-smtp.us-west-2.amazonaws.com"
 SMTP_PORT = 587
+with open('credentials.csv', mode='r') as csv_file:
+    csv_reader = csv.DictReader(csv_file)
+    df = dict()
+    for row in csv_reader:
+        df["Smtp Username"] = row["Smtp Username"]
+        df["Smtp Password"] = row["Smtp Password"]
+        df['SENDGRID_API_KEY'] = row['SENDGRID_API_KEY']      
+        df['MAILGUN_API_KEY'] = row['MAILGUN_API_KEY']
 
-df = pd.read_csv('credentials.csv')
+# df = pd.read_csv('credentials.csv')
 AWS_REGION = 'us-west-2'
 # Mail contents
 SENDER = 'sandeepnl@outlook.com'
@@ -48,15 +56,15 @@ class Email:
             self.service_provider = SMTP
         elif srvs_provider == AWSSES:
             self.service_provider = AWSSES
-            self.user = df['Smtp Username'][0]
-            self.passwd = df['Smtp Password'][0]
+            self.user = df['Smtp Username']
+            self.passwd = df['Smtp Password']
         elif srvs_provider == SENDGRID:
-            self.__apikey = df['SENDGRID_API_KEY'][0]
+            self.__apikey = df['SENDGRID_API_KEY']
             self.client = SendGridAPIClient(self.__apikey)
             self.service_provider = SENDGRID
         elif srvs_provider == MAILGUN:
             self.service_provider = MAILGUN
-            self.__apikey = df['MAILGUN_API_KEY'][0]
+            self.__apikey = df['MAILGUN_API_KEY']
 
         else:
             self.client = None
@@ -93,7 +101,7 @@ class Email:
             server.ehlo()
             server.starttls()
             server.ehlo()
-            server.login(df['Smtp Username'][0], df['Smtp Password'][0])
+            server.login(df['Smtp Username'], df['Smtp Password'])
             server.sendmail(SENDER, recipient, msg.as_string())
             server.close()
         except Exception as e:

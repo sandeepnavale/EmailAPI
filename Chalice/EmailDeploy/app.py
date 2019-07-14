@@ -8,17 +8,6 @@ app = Chalice(app_name='EmailDeploy')
 def index():
     return {'hello': 'world'}
 
-
-# The view function above will return {"hello": "world"}
-# whenever you make an HTTP GET request to '/'.
-#
-# Here are a few more examples:
-#
-# @app.route('/hello/{name}')
-# def hello_name(name):
-#    # '/hello/james' -> {"hello": "james"}
-#    return {'hello': name}
-#
 @app.route('/sendmail', methods=['POST'])
 def sendmail():
     data = app.current_request.json_body
@@ -34,5 +23,4 @@ def sendmail():
     return f'Message send: {ret}', 201
 
 
-    # return {'user': req_as_json}
 

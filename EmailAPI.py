@@ -14,7 +14,7 @@ SMTP = "SMTP"
 SMTP_HOST = "email-smtp.us-west-2.amazonaws.com"
 SMTP_PORT = 587
 
-df = pd.read_csv('credentials.csv')
+DF = pd.read_csv('credentials.csv')
 AWS_REGION = 'us-west-2'
 # Mail contents
 SENDER = 'sandeepnl@outlook.com'
@@ -48,20 +48,20 @@ class Email:
             self.service_provider = SMTP
         elif srvs_provider == AWSSES:
             self.service_provider = AWSSES
-            self.user = df['Smtp Username'][0]
-            self.passwd = df['Smtp Password'][0]
+            self.user = DF['Smtp Username'][0]
+            self.passwd = DF['Smtp Password'][0]
         elif srvs_provider == SENDGRID:
-            self.__apikey = df['SENDGRID_API_KEY'][0]
+            self.__apikey = DF['SENDGRID_API_KEY'][0]
             self.client = SendGridAPIClient(self.__apikey)
             self.service_provider = SENDGRID
         elif srvs_provider == MAILGUN:
             self.service_provider = MAILGUN
-            self.__apikey = df['MAILGUN_API_KEY'][0]
-
+            self.__apikey = DF['MAILGUN_API_KEY'][0]
         else:
             self.client = None
 
     def send_mailgun_email(self, from_address, to_address, subject, msg):
+        """ Sends the MailGun emails """
         status = requests.post(
             "https://api.mailgun.net/v3/sandboxff066e78a0f1460a8564a6e2d8566257.mailgun.org/messages",
             auth=("api", self.__apikey),
@@ -77,6 +77,7 @@ class Email:
         return False
 
     def send_aws_email(self, reply_to, recipient, subject, body):
+        """ Sends the AWS Emails """
         msg = MIMEMultipart('alternative')
         msg['Subject'] = subject
         msg['From'] = formataddr((SENDERNAME, SENDER))
@@ -93,7 +94,7 @@ class Email:
             server.ehlo()
             server.starttls()
             server.ehlo()
-            server.login(df['Smtp Username'][0], df['Smtp Password'][0])
+            server.login(DF['Smtp Username'][0], DF['Smtp Password'][0])
             server.sendmail(SENDER, recipient, msg.as_string())
             server.close()
         except Exception as e:
@@ -106,6 +107,7 @@ class Email:
                           to_addr=RECIPIENT,
                           subject="SUBJECT",
                           body="BODY_TEXT"):
+        """ Sends the sendgrid emails. """
         return Mail(from_email=from_addr,
                     to_emails=to_addr,
                     subject=subject,
@@ -116,17 +118,22 @@ class Email:
                    to_address,
                    subject="SUBJECT",
                    msg="BODY_TEXT"):
+        """ Meidiator function to send mails """
         status = 0
         try:
-            if self.service_provider == SMTP:
-                self.client.sendmail(self.user, to_address, msg)
-            elif self.service_provider == SENDGRID:
-                mail = self.compose_send_grid(from_address, to_address,
-                                              subject, msg)
+            # if self.service_provider == SMTP:
+            # self.client.sendmail(self.user, to_address, msg)
+            if self.service_provider == SENDGRID:
+                # mail = self.compose_send_grid(from_address, to_address,
+                #                               subject, msg)
+                mail = Mail(from_email=from_address,
+                            to_emails=to_address,
+                            subject=subject,
+                            plain_text_content=msg)
+
                 response = self.client.send(mail)
                 if response.status_code != 201:
                     status = False
-
             elif self.service_provider == AWSSES:
                 status = self.send_aws_email(from_address, to_address, subject,
                                              msg)
