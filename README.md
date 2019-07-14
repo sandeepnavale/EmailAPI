@@ -16,17 +16,11 @@
 ## Commands
 ### Chalice commands
 Chalice installs Python APP on AWS Lambda. 
-
 1. pip install chalice -- to install chalice.
-chalice new-project -- to create new chalice project.
-chalice local -- to deploy services locally.
-chalice deploy -- to deploy on AWS cloud using AWS Lambda.
-Resources deployed:
-  - Lambda ARN: arn:aws:lambda:us-west-2:928180933616:function:newProj-dev
-  - Rest API URL: https://204q4esdki.execute-api.us-west-2.amazonaws.com/api/sendmail
-
- 
-
+2. chalice new-project -- to create new chalice project.
+3. chalice local -- to deploy services locally.
+4. chalice deploy -- to deploy on AWS cloud using AWS Lambda & Gateway.
+  
 ## Deployments
 ### Local deployment
 1. Run python rest_apis.py to get the local server IP. 
@@ -34,7 +28,11 @@ Resources deployed:
 2. In new terminal run curl command to invoke rest commands.
 Examples are in rest_commands.txt
 
-
+### AWS Deployment
+1. Type "chalice deploy" in "serverlessDeployment" 
+2. Above command will create AWS lambda and provide the URI.
+   use "https://2tzi8cc4uj.execute-api.us-west-2.amazonaws.com/api/sendmail"
+   
 
 **Description of parameters.**
 1. "service_provider" -- can be "MAILGUN", "AWSSES", or "SENDGRID",
