@@ -44,3 +44,40 @@ curl -X POST \
 	"subject": "MAILGUN REST API Sender",
 	"body": "<br><br> <b>Mail test</b>"
     }'
+
+
+curl -X POST \
+  https://204q4esdki.execute-api.us-west-2.amazonaws.com/api/sendmail \
+  -H 'content-type: application/json' \
+  -d '{
+    "service_provider":"MAILGUN",
+	"sender": "sandeepnl@outlook.com",
+	"recipient": "mail2sandeepnl@gmail.com",
+	"subject": "MAILGUN REST API Sender",
+	"body": "<br><br> <b>Mail test</b>"
+    }'
+
+
+curl -X POST \
+  https://204q4esdki.execute-api.us-west-2.amazonaws.com/api/sendmail \
+  -H 'content-type: application/json' \
+  -d '{
+    "service_provider":"SENDGRID",
+	"sender": "sandeepnl@outlook.com",
+	"recipient": "mail2sandeepnl@gmail.com",
+	"subject": "MAILGUN REST API Sender",
+	"body": "<br><br> <b>Mail test</b>"
+    }'
+
+
+
+curl -X POST \
+  https://204q4esdki.execute-api.us-west-2.amazonaws.com/api/sendmail \
+  -H 'content-type: application/json' \
+  -d '{
+    "service_provider":"AWSSES",
+	"sender": "sandeepnl@outlook.com",
+	"recipient": "mail2sandeepnl@gmail.com",
+	"subject": "MAILGUN REST API Sender",
+	"body": "<br><br> <b>Mail test</b>"
+    }'
