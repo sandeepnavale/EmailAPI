@@ -25,7 +25,7 @@ Resources deployed:
   - Lambda ARN: arn:aws:lambda:us-west-2:928180933616:function:newProj-dev
   - Rest API URL: https://204q4esdki.execute-api.us-west-2.amazonaws.com/api/sendmail
 
-
+ 
 
 ## Deployments
 ### Local deployment

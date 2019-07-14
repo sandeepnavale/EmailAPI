@@ -121,19 +121,18 @@ class Email:
         """ Meidiator function to send mails """
         status = 0
         try:
-            # if self.service_provider == SMTP:
-            # self.client.sendmail(self.user, to_address, msg)
             if self.service_provider == SENDGRID:
-                # mail = self.compose_send_grid(from_address, to_address,
-                #                               subject, msg)
-                mail = Mail(from_email=from_address,
+                mail = 
+
+                response = self.client.send(
+                    Mail(from_email=from_address,
                             to_emails=to_address,
                             subject=subject,
-                            plain_text_content=msg)
-
-                response = self.client.send(mail)
+                            plain_text_content=msg))
                 if response.status_code != 201:
-                    status = False
+                    status = response.status_code
+                    return True
+
             elif self.service_provider == AWSSES:
                 status = self.send_aws_email(from_address, to_address, subject,
                                              msg)
@@ -142,8 +141,8 @@ class Email:
                 status = self.send_mailgun_email(from_address, to_address,
                                                  subject, msg)
         except Exception as e:
-            print(e, status)
-            return False
+            print('ERROR IN SENDING EMAIL ', e, status)
+            return True
         finally:
-            print('Email Sent')
+            print('Email Sent -- SUCCESS')
         return False
