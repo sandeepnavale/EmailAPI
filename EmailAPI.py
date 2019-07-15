@@ -20,7 +20,7 @@ AWS_REGION = 'us-west-2'
 
 class Email:
     def __init__(self, srvs_provider):
-        if srvs_provider == SMTP:
+        if srvs_provider == SMTP: # for generic SMTP calls, not implementing now.
             self.service_provider = SMTP
         elif srvs_provider == AWSSES:
             self.service_provider = AWSSES

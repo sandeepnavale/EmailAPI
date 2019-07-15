@@ -12,8 +12,9 @@
 ## Libraries & Tools used.
 1. Chalice for deploying on AWS.
 2. sendgrid, smtplib,requests, etc.
-3. httpie to debug AWS REST calls.
-
+3. httpie to debug AWS REST calls in cloud.
+4. AWS CloudWatch to monitor logs & calls.
+5. AWS Lambda, AWS Gateway & AWS SES for email service.
 
 ## Commands
 ### Chalice commands
@@ -34,7 +35,7 @@ Examples are in rest_commands.txt
 1. Type "chalice deploy" in "serverlessDeployment" 
 2. Above command will create AWS lambda and provide the URI.
    use "https://2tzi8cc4uj.execute-api.us-west-2.amazonaws.com/api/sendmail"
-   
+3.    
 
 **Description of parameters.**
 1. "service_provider" -- can be "MAILGUN", "AWSSES", or "SENDGRID",
