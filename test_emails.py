@@ -93,15 +93,15 @@ class TestCloudRestAPI(unittest.TestCase):
     """ Tests REST Api for AWS Lambda local & cloud """
     def cleanPorts(self):
         """ Clean up process & ports if its listening """
-        CmdOutput = " "
+        cmd_output = " "
         try:
-            CmdOutput = subprocess.check_output('fuser 8000/tcp', shell=True)
+            cmd_output = subprocess.check_output('fuser 8000/tcp', shell=True)
         except subprocess.CalledProcessError as e:
             print(e.output, e.returncode)
-            CmdOutput = " "
-        if CmdOutput is not " ":
-            port = int(CmdOutput.strip())
-            os.system('kill -9 ' + str(port))
+            cmd_output = " "
+        if cmd_output is not " ":
+            pid = int(cmd_output.strip())
+            os.system('kill -9 ' + str(pid))
 
     def setUp(self):
         """ Change the working diretory to chalice directory, create process."""
