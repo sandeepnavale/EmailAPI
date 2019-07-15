@@ -8,6 +8,11 @@
   
   Smtp Username,Smtp Password,SENDGRID_API_KEY,MAILGUN_API_KEY 
   AWSUSERNAME,AWSSES_PWD,SEND KEY,MAINGUN_APIKEY
+## API Endpoint
+1. /sendmail -- POST, Send email using stored credentials
+2. /sendmailaws -- POST, Send email using AWS credentials in POST parameters 
+3. /sendmailsg -- Similar to above for SendGrid API TOKEN.
+4. /sendmailmg -- Similar to above for MailGun API TOKEN.
 
 ## Libraries & Tools used.
 1. Chalice for deploying on AWS.
