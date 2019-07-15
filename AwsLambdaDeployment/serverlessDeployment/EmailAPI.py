@@ -119,6 +119,76 @@ class Email:
             print('Email Sent -- SUCCESS')
         return False
 
+    def send_seperate_mail_aws(self,
+                               aws_smptp_host="",
+                               aws_smptp_port="",
+                               aws_smpt_user="",
+                               aws_smpt_passwd="",
+                               from_address="from@domain.com",
+                               to_address='to@domain.com',
+                               subject="Subject",
+                               body="Body text"):
+        """ Sends the AWS Mails with Host, Port, SMTP User & Passwd inputs """
+
+        msg = MIMEMultipart('alternative')
+        msg['Subject'] = subject
+        msg['From'] = formataddr((from_address, from_address))
+        msg['To'] = to_address
+        msg.add_header('Reply-To', from_address)
+
+        part1 = MIMEText(body, 'plain')
+        part2 = MIMEText(body, 'html')
+        msg.attach(part1)
+        msg.attach(part2)
+
+        try:
+            server = smtplib.SMTP(aws_smptp_host, aws_smptp_port)
+            server.ehlo()
+            server.starttls()
+            server.ehlo()
+            server.login(aws_smpt_user, aws_smpt_passwd)
+            server.sendmail(from_address, to_address, msg.as_string())
+            server.close()
+        except Exception as e:
+            print(e)
+            return True
+        return False
+
+    def send_seperate_mail_aws(self,
+                               aws_smptp_host="",
+                               aws_smptp_port="",
+                               aws_smpt_user="",
+                               aws_smpt_passwd="",
+                               from_address="from@domain.com",
+                               to_address='to@domain.com',
+                               subject="Subject",
+                               body="Body text"):
+        """ Sends the AWS Mails with Host, Port, SMTP User & Passwd inputs """
+
+        msg = MIMEMultipart('alternative')
+        msg['Subject'] = subject
+        msg['From'] = formataddr((from_address, from_address))
+        msg['To'] = to_address
+        msg.add_header('Reply-To', from_address)
+
+        part1 = MIMEText(body, 'plain')
+        part2 = MIMEText(body, 'html')
+        msg.attach(part1)
+        msg.attach(part2)
+
+        try:
+            server = smtplib.SMTP(aws_smptp_host, aws_smptp_port)
+            server.ehlo()
+            server.starttls()
+            server.ehlo()
+            server.login(aws_smpt_user, aws_smpt_passwd)
+            server.sendmail(from_address, to_address, msg.as_string())
+            server.close()
+        except Exception as e:
+            print(e)
+            return True
+        return False
+
 
 if __name__ == '__main__':
     eml = Email("AWSSES")

@@ -81,3 +81,20 @@ curl -X POST \
 	"subject": "MAILGUN REST API Sender",
 	"body": "<br><br> <b>Mail test</b>"
     }'
+
+
+curl -X POST \
+  http://127.0.0.1:5000/sendmailaws\
+  -H 'content-type: application/json' \
+  -d '{
+     "aws_smptp_host":"email-smtp.us-west-2.amazonaws.com",
+     "aws_smptp_port":"587",
+     "aws_smpt_user":"AKIA5QG7FCPYM2TG2XHK",
+     "aws_smpt_passwd":"BPRDpFyPTfCP/YQSABmu2B5wSROPQ9C33XTcXWoJ50E2",
+    "service_provider":"AWSSES",
+	"sender": "sandeepnl@outlook.com",
+	"recipient": "mail2sandeepnl@gmail.com",
+	"subject": "SEPERATE MAIL AWS",
+	"body": "<br><br> <b>Mail test</b>"
+    }'
+
