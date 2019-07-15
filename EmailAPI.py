@@ -17,6 +17,7 @@ SMTP_PORT = 587
 DF = pd.read_csv('credentials.csv')
 AWS_REGION = 'us-west-2'
 
+
 class Email:
     def __init__(self, srvs_provider):
         if srvs_provider == SMTP:
@@ -77,7 +78,6 @@ class Email:
             return True
         return False
 
-
     def send_email(self,
                    from_address="from@domain.com",
                    to_address='to@domain.com',
@@ -90,9 +90,9 @@ class Email:
 
                 response = self.client.send(
                     Mail(from_email=from_address,
-                            to_emails=to_address,
-                            subject=subject,
-                            plain_text_content=msg))
+                         to_emails=to_address,
+                         subject=subject,
+                         plain_text_content=msg))
                 if response.status_code != 202:
                     status = response.status_code
                     return True

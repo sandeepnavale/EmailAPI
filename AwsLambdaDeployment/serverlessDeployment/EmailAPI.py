@@ -1,3 +1,4 @@
+import csv
 import smtplib
 import requests
 from email.mime.multipart import MIMEMultipart
@@ -5,7 +6,6 @@ from email.mime.text import MIMEText
 from email.utils import formataddr
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
-import csv
 
 AWSSES = "AWSSES"
 SENDGRID = "SENDGRID"
@@ -22,8 +22,8 @@ with open('credentials.csv', mode='r') as csv_file:
         df['SENDGRID_API_KEY'] = row['SENDGRID_API_KEY']
         df['MAILGUN_API_KEY'] = row['MAILGUN_API_KEY']
 
-# df = pd.read_csv('credentials.csv')
 AWS_REGION = 'us-west-2'
+
 
 class Email:
     def __init__(self, srvs_provider):
@@ -79,13 +79,12 @@ class Email:
             server.starttls()
             server.ehlo()
             server.login(df['Smtp Username'], df['Smtp Password'])
-            server.sendmail(SENDER, recipient, msg.as_string())
+            server.sendmail(from_address, to_address, msg.as_string())
             server.close()
         except Exception as e:
             print(e)
             return True
         return False
-
 
     def send_email(self,
                    from_address="from@domain.com",
@@ -99,9 +98,9 @@ class Email:
 
                 response = self.client.send(
                     Mail(from_email=from_address,
-                            to_emails=to_address,
-                            subject=subject,
-                            plain_text_content=msg))
+                         to_emails=to_address,
+                         subject=subject,
+                         plain_text_content=msg))
                 if response.status_code != 202:
                     status = response.status_code
                     return True
