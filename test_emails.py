@@ -39,6 +39,38 @@ class MyTestDirectSendmail(unittest.TestCase):
 
 class TestRestFunctions(unittest.TestCase):
     """ Test all local rest Apis """
+
+    def cleanPorts(self):
+        """ Clean up process & ports if its listening """
+        cmd_output = " "
+        try:
+            cmd_output = subprocess.check_output('fuser 5000/tcp', shell=True)
+        except subprocess.CalledProcessError as e:
+            print(e.output, e.returncode)
+            cmd_output = " "
+        if cmd_output is not " ":
+            pid = int(cmd_output.strip())
+            os.system('kill -9 ' + str(pid))
+
+    def setUp(self):
+        """ Change the working diretory to chalice directory, create process."""
+        print(f'Current working directory is {subprocess.check_output("pwd")}')
+        # os.chdir('AwsLambdaDeployment/serverlessDeployment')
+        self.cleanPorts()
+        self.proc1 = subprocess.Popen(
+            [r'python', 'rest_apis.py', '--host', '127.0.0.1', '--port', '5000'],
+            stdout=subprocess.PIPE,
+            shell=True,
+            preexec_fn=os.setsid)
+        self.proc1.wait()
+        print('Setup Done')
+
+    def tearDown(self) -> None:
+        """ Clean up ports & shutdown chalice process """
+        print('Tearing down.')
+        # os.chdir('..')
+        self.cleanPorts()
+
     def test_sendgrid_restapi(self):
         """ Tests send email via SendGrid services """
         with app.test_client() as c:
@@ -113,7 +145,7 @@ class TestCloudRestAPI(unittest.TestCase):
             stdout=subprocess.PIPE,
             shell=True,
             preexec_fn=os.setsid)
-
+        self.proc1.wait()
         print('Setup Done')
 
     def tearDown(self) -> None:
@@ -185,3 +217,4 @@ class TestCloudRestAPI(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+    # unittest.TestRestFunctions()
