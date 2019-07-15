@@ -89,8 +89,8 @@ curl -X POST \
   -d '{
      "aws_smptp_host":"email-smtp.us-west-2.amazonaws.com",
      "aws_smptp_port":"587",
-     "aws_smpt_user":"AKIA5QG7FCPYM2TG2XHK",
-     "aws_smpt_passwd":"BPRDpFyPTfCP/YQSABmu2B5wSROPQ9C33XTcXWoJ50E2",
+     "aws_smpt_user":"SMTP USR",
+     "aws_smpt_passwd":"SMTP PASSWD",
     "service_provider":"AWSSES",
 	"sender": "sandeepnl@outlook.com",
 	"recipient": "mail2sandeepnl@gmail.com",
